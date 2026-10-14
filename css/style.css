@@ -1,0 +1,118 @@
+/* Accessibilité : texte de base 18 px, fort contraste, grands boutons.
+   Tout est en rem : le réglage "texte plus gros" change la taille de html. */
+:root {
+  --fond: #ffffff;
+  --texte: #0f172a;
+  --gris: #475569;
+  --gris-clair: #f1f5f9;
+  --bleu: #1e40af;
+  --bleu-fonce: #172554;
+  --rouge: #b91c1c;
+  --rouge-fonce: #7f1d1d;
+  --vert: #166534;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 18px; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  /* Police lisible + polices arabes pour les mots arabes éventuels */
+  font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, "Noto Naskh Arabic", "Arial", sans-serif;
+  line-height: 1.5;
+}
+
+:focus-visible { outline: 4px solid #1d4ed8; outline-offset: 2px; }
+
+.chargement { padding: 1.5rem; font-size: 1.4rem; font-weight: 700; }
+
+/* Page principale */
+.conteneur { max-width: 48rem; margin: 0 auto; }
+.petit { max-width: 32rem; margin: 0 auto; padding: 1rem; }
+main { padding: 1rem; display: grid; gap: 1rem; }
+
+/* En-tête */
+header.entete { background: #0f172a; color: #fff; padding: 1rem; }
+.entete .ligne { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+.entete .nom { font-size: 1.2rem; font-weight: 700; margin: 0; }
+.entete .nom small { font-weight: 400; font-size: .9rem; }
+.entete .solde { font-size: 1.5rem; font-weight: 800; margin: 0; }
+nav.menu { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+nav.menu a, .entete button {
+  min-height: 3rem; padding: 0 1rem; display: inline-flex; align-items: center;
+  border: 2px solid #fff; border-radius: .75rem; color: #fff; background: transparent;
+  font: inherit; font-size: 1.05rem; font-weight: 700; text-decoration: none; cursor: pointer;
+}
+nav.menu a.actif { background: #fff; color: #0f172a; }
+.entete .outils { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+
+/* Cartes */
+.carte { border: 2px solid var(--texte); border-radius: 1rem; padding: 1.1rem; background: #fff; }
+.carte h1 { font-size: 1.7rem; margin: 0 0 1rem; }
+.carte h2 { font-size: 1.3rem; margin: 0 0 .5rem; }
+.centre { text-align: center; }
+.gros-solde { font-size: 4rem; font-weight: 800; margin: .25rem 0; line-height: 1.1; }
+
+/* Formulaires */
+label { display: block; font-weight: 700; margin-bottom: 1rem; font-size: 1.05rem; }
+label > span { display: block; margin-bottom: .25rem; }
+input, select, textarea {
+  width: 100%; min-height: 3.2rem; padding: .5rem .9rem; font: inherit; font-size: 1.15rem;
+  border: 2px solid var(--texte); border-radius: .75rem; background: #fff; color: var(--texte);
+}
+textarea { min-height: 8rem; resize: vertical; }
+
+/* Boutons */
+.btn {
+  min-height: 3.4rem; padding: 0 1.5rem; border: 2px solid var(--bleu-fonce); border-radius: .75rem;
+  background: var(--bleu); color: #fff; font: inherit; font-size: 1.2rem; font-weight: 700; cursor: pointer;
+}
+.btn:hover { background: var(--bleu-fonce); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.secondaire { background: #fff; color: var(--texte); border-color: var(--texte); }
+.btn.secondaire:hover { background: var(--gris-clair); }
+.btn.danger { background: var(--rouge); border-color: var(--rouge-fonce); }
+.btn.danger:hover { background: var(--rouge-fonce); }
+.btn.large { width: 100%; }
+.btn.moyen { min-height: 3rem; font-size: 1.05rem; }
+.rangee { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.filtres button {
+  min-height: 3rem; padding: 0 1rem; border: 2px solid var(--texte); border-radius: .75rem;
+  background: #fff; font: inherit; font-size: 1.05rem; font-weight: 700; cursor: pointer;
+}
+.filtres button.actif { background: var(--texte); color: #fff; }
+
+/* Messages */
+.notice { border: 2px solid; border-radius: .75rem; padding: .9rem; font-size: 1.05rem; font-weight: 700; margin: .75rem 0; }
+.notice.erreur { background: #fee2e2; border-color: var(--rouge-fonce); color: #450a0a; }
+.notice.ok { background: #dcfce7; border-color: var(--vert); color: #052e16; }
+.notice.info { background: #fef9c3; border-color: #854d0e; color: #422006; }
+
+/* Listes */
+ul.liste { list-style: none; margin: 0; padding: 0; }
+ul.liste > li { padding: .8rem 0; border-top: 2px solid #cbd5e1; }
+ul.liste > li:first-child { border-top: 0; }
+ul.cartes { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; }
+ul.cartes > li { border: 2px solid var(--texte); border-radius: .75rem; padding: 1rem; display: grid; gap: .6rem; }
+ul.cartes > li.inactif { background: #e2e8f0; }
+.ligne-tx { display: flex; justify-content: space-between; align-items: center; gap: .75rem; }
+.montant { font-size: 1.8rem; font-weight: 800; }
+.montant.plus { color: var(--vert); }
+.montant.moins { color: var(--rouge); }
+.date { color: var(--gris); font-size: .95rem; margin: 0; }
+.prix { font-size: 1.8rem; font-weight: 800; margin: 0; }
+.reponse { background: var(--gris-clair); border-radius: .75rem; padding: .75rem; margin: .25rem 0; }
+p { margin: .25rem 0; }
+
+/* Tchat */
+.tchat-liste { max-height: 50vh; overflow-y: auto; display: grid; gap: .6rem; margin-bottom: 1rem; }
+.bulle { border: 2px solid var(--texte); border-radius: .75rem; padding: .6rem .8rem; background: var(--gris-clair); margin-right: 2rem; }
+.bulle.moi { background: #dbeafe; margin-right: 0; margin-left: 2rem; }
+.bulle .qui { font-weight: 700; font-size: .95rem; margin: 0; }
+.bulle .texte { font-size: 1.15rem; white-space: pre-wrap; margin: 0; overflow-wrap: anywhere; }
+.tchat-form { display: flex; gap: .5rem; }
+.tchat-form input { flex: 1; }

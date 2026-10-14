@@ -3,7 +3,21 @@
 Site de points pour une classe de collège (18 comptes) : points gagnés grâce aux notes,
 échanges entre élèves, boutique de cadeaux imprimés en 3D, boîte à idées, tchat privé.
 
-**Stack** : Next.js (App Router) + TypeScript + Tailwind, Supabase (Postgres, Auth, RLS, Realtime), Vercel.
+**Stack** : HTML + CSS + JavaScript pur (aucune installation, aucun build) et Supabase
+(Postgres, Auth, RLS, Realtime). Hébergement : Vercel (site statique).
+
+> L'ancienne version Next.js est conservée sous l'étiquette Git `version-nextjs`.
+
+## Structure
+
+```
+index.html            page unique
+css/style.css         styles (texte 18 px, fort contraste)
+js/config.js          URL + clé publique Supabase
+js/main.js            connexion, menu, routeur
+js/pages-*.js         pages (élève, délégué, suppléant, tchat, connexion)
+supabase/migrations/  scripts SQL (tables, sécurité RLS, fonctions)
+```
 
 ## Sécurité
 
@@ -13,24 +27,21 @@ Site de points pour une classe de collège (18 comptes) : points gagnés grâce 
 - Notes, envois, commandes, annulations et remboursements passent par des fonctions SQL (RPC)
   atomiques qui vérifient le rôle et le solde (verrou `FOR UPDATE` contre les doubles clics).
 - La note n'est **jamais** stockée, seulement les points.
-- La clé `service_role` n'est utilisée nulle part dans le projet.
+- Les textes saisis sont affichés avec `textContent` (pas d'injection de code).
+- La clé `service_role` n'est utilisée nulle part. `js/config.js` ne contient que la clé publique.
 
-## Base de données
+## Déployer sur Vercel
 
-Les scripts sont dans `supabase/migrations/` (à appliquer dans l'ordre 001 → 005).
+1. https://vercel.com/new → importer le dépôt `ecem`.
+2. **Framework Preset : Other**. Laisser vides Build Command et Output Directory.
+3. Deploy. Aucune variable d'environnement n'est nécessaire.
 
-## Lancer en local
+## Tester en local
+
+Les modules JavaScript demandent un petit serveur (pas d'ouverture directe du fichier) :
 
 ```bash
-npm install
-npm run dev
-```
-
-Créer `.env.local` :
-
-```
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+npx serve .
 ```
 
 ## Renommer un compte
@@ -47,4 +58,3 @@ L'identifiant de connexion (`eleve1`) reste le même ; seul le prénom affiché 
 ## Réglages à faire dans le tableau de bord Supabase
 
 - Authentication → désactiver « Allow new users to sign up » (par sécurité ; un compte sans profil ne voit de toute façon rien).
-- Authentication → activer la protection contre les mots de passe compromis si l'offre le permet.
