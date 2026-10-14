@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Mots de passe provisoires (privé)
+COMPTES-PROVISOIRES.txt

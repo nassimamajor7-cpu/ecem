@@ -1,26 +1,30 @@
 @import "tailwindcss";
 
+/* Accessibilité : texte de base 18 px, fort contraste, thème clair uniquement */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-lisible), var(--font-arabe), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  font-size: 18px; /* modifié par le réglage « texte plus gros » */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+/* Contour très visible au clavier */
+:focus-visible {
+  outline: 4px solid #1d4ed8;
+  outline-offset: 2px;
 }

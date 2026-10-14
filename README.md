@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Points de la classe
 
-## Getting Started
+Site de points pour une classe de collège (18 comptes) : points gagnés grâce aux notes,
+échanges entre élèves, boutique de cadeaux imprimés en 3D, boîte à idées, tchat privé.
 
-First, run the development server:
+**Stack** : Next.js (App Router) + TypeScript + Tailwind, Supabase (Postgres, Auth, RLS, Realtime), Vercel.
+
+## Sécurité
+
+- Le solde n'est jamais modifié directement : il est la somme du journal `transactions`
+  (ajout seul, modification et suppression interdites par un déclencheur).
+- RLS activée sur toutes les tables ; le navigateur n'écrit jamais dans `transactions` ni `orders`.
+- Notes, envois, commandes, annulations et remboursements passent par des fonctions SQL (RPC)
+  atomiques qui vérifient le rôle et le solde (verrou `FOR UPDATE` contre les doubles clics).
+- La note n'est **jamais** stockée, seulement les points.
+- La clé `service_role` n'est utilisée nulle part dans le projet.
+
+## Base de données
+
+Les scripts sont dans `supabase/migrations/` (à appliquer dans l'ordre 001 → 005).
+
+## Lancer en local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Créer `.env.local` :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Renommer un compte
 
-## Learn More
+Dans l'éditeur SQL de Supabase (exemple : `eleve1` devient « Yanis ») :
 
-To learn more about Next.js, take a look at the following resources:
+```sql
+update public.profiles set display_name = 'Yanis'
+ where id = (select id from auth.users where email = 'eleve1@classe.local');
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+L'identifiant de connexion (`eleve1`) reste le même ; seul le prénom affiché change.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Réglages à faire dans le tableau de bord Supabase
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Authentication → désactiver « Allow new users to sign up » (par sécurité ; un compte sans profil ne voit de toute façon rien).
+- Authentication → activer la protection contre les mots de passe compromis si l'offre le permet.
