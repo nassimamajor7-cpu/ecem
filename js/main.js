@@ -2,7 +2,7 @@
 import { supabase } from "./supabase.js";
 import { state, loadAll } from "./state.js";
 import { h, vider, ROLE_LABEL } from "./ui.js";
-import { pageLogin, pageMotDePasse } from "./pages-auth.js";
+import { pageLogin, pageInscription, pageMotDePasse } from "./pages-auth.js";
 import { pageAccueil, pageEnvoyer, pageBoutique, pageIdees } from "./pages-eleve.js";
 import { pageNotes, pageEchanges, pageIdeesRecues } from "./pages-delegue.js";
 import { pageGererBoutique, pageCommandes } from "./pages-suppleant.js";
@@ -108,7 +108,7 @@ async function afficher() {
   if (!state.session) {
     cadreInvite(h("div"));
     const zone = app.querySelector(".petit");
-    zone.lastChild.replaceWith(pageLogin());
+    zone.lastChild.replaceWith(location.hash === "#/inscription" ? pageInscription() : pageLogin());
     return;
   }
 
@@ -134,6 +134,8 @@ async function afficher() {
     return;
   }
 
+  // Après une inscription réussie, on quitte l'adresse #/inscription
+  if (location.hash === "#/inscription") history.replaceState(null, "", "#/");
   const chemin = location.hash.slice(1) || "/";
   const route = ROUTES[chemin] ?? ROUTES["/"];
   const main = cadreConnecte(ROUTES[chemin] ? chemin : "/", route);
@@ -161,5 +163,6 @@ supabase.auth.onAuthStateChange((event, session) => {
 });
 
 window.addEventListener("hashchange", () => {
-  if (state.session && state.profile) afficher();
+  // Visiteur : bascule connexion <-> inscription. Connecté : changement de page.
+  if (!state.session || state.profile) afficher();
 });
